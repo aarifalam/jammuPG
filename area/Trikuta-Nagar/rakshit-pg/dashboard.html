@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PG Dashboard - Manage Rooms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-header p {
+            font-size: 1.1rem;
+        }
+        
+        .room-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .room-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            flex: 1 1 calc(50% - 30px);
+            min-width: 300px;
+        }
+        
+        .room-header {
+            padding: 20px;
+            background-color: #4a69bd;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .room-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .beds-container {
+            padding: 20px;
+        }
+        
+        .bed-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .bed-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .bed-icon {
+            font-size: 1.5rem;
+        }
+        
+        .status-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .available {
+            background-color: #2ed573;
+            color: white;
+        }
+        
+        .booked {
+            background-color: #ff4757;
+            color: white;
+        }
+        
+        .toggle-btn {
+            background-color: #4a69bd;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-btn:hover {
+            background-color: #3c5aa8;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: #2ed573;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        .connected {
+            background-color: #2ed573;
+            color: white;
+        }
+        
+        .disconnected {
+            background-color: #ff4757;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .room-card {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>PG Management Dashboard</h1>
+            <p>Manage bed availability for Sunshine PG Residence</p>
+        </div>
+        
+        <div class="connection-status" id="connectionStatus">Connecting...</div>
+        
+        <div class="room-container">
+            <!-- Room 1 -->
+            <div class="room-card">
+                <div class="room-header">
+                    <div class="room-title">Room No. 1</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn available toggle-bed" data-room="1" data-bed="1">Available</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn booked toggle-bed" data-room="1" data-bed="2">Booked</button>
+                    </div>
+
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 3</span>
+                        </div>
+                        <button class="status-btn booked toggle-bed" data-room="1" data-bed="3">Booked</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Room 2 -->
+            <div class="room-card">
+                <div class="room-header">
+                    <div class="room-title">Room No. 2</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn available toggle-bed" data-room="2" data-bed="1">Available</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn available toggle-bed" data-room="2" data-bed="2">Available</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Room 3 -->
+            <div class="room-card">
+                <div class="room-header">
+                    <div class="room-title">Room No. 3</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn available toggle-bed" data-room="3" data-bed="1">Available</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn available toggle-bed" data-room="3" data-bed="2">Available</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Room 4 -->
+            <div class="room-card">
+                <div class="room-header">
+                    <div class="room-title">Room No. 4</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn booked toggle-bed" data-room="4" data-bed="1">Booked</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn available toggle-bed" data-room="4" data-bed="2">Available</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Room 5 -->
+            <div class="room-card">
+                <div class="room-header">
+                    <div class="room-title">Room No. 5</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn booked toggle-bed" data-room="5" data-bed="1">Booked</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn booked toggle-bed" data-room="5" data-bed="2">Booked</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="notification" id="notification">
+            Bed status updated successfully!
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, set, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDFB6GRSzXvmE8p7FcBTbAKLtaNhGgQ0mA",
+        authDomain: "pg-management-a38e6.firebaseapp.com",
+        databaseURL: "https://pg-management-a38e6-default-rtdb.firebaseio.com",
+        projectId: "pg-management-a38e6",
+        storageBucket: "pg-management-a38e6.firebasestorage.app",
+        messagingSenderId: "620110947710",
+        appId: "1:620110947710:web:5351c5b85f7ab2c8ae7f2f"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const connectionStatus = document.getElementById('connectionStatus');
+
+    // Monitor connection status
+    const connectedRef = ref(db, ".info/connected");
+    onValue(connectedRef, (snap) => {
+        if (snap.val() === true) {
+            connectionStatus.textContent = "Connected";
+            connectionStatus.className = "connection-status connected";
+        } else {
+            connectionStatus.textContent = "Disconnected";
+            connectionStatus.className = "connection-status disconnected";
+        }
+    });
+
+    // Function to get number of beds in a room
+    function getBedCount(roomNumber) {
+        const roomCard = document.querySelector(`.room-card:nth-child(${roomNumber})`);
+        if (!roomCard) return 0;
+        return roomCard.querySelectorAll('.bed-item').length;
+    }
+
+    // Function to add a bed to a room
+    function addBedToRoom(roomNumber) {
+        const roomCard = document.querySelector(`.room-card:nth-child(${roomNumber})`);
+        if (!roomCard) return;
+        
+        const bedsContainer = roomCard.querySelector('.beds-container');
+        const currentBedCount = getBedCount(roomNumber);
+        const newBedNumber = currentBedCount + 1;
+        
+        // Create new bed element
+        const newBedItem = document.createElement('div');
+        newBedItem.className = 'bed-item';
+        newBedItem.innerHTML = `
+            <div class="bed-info">
+                <span class="bed-icon">🛏️</span>
+                <span>Bed ${newBedNumber}</span>
+            </div>
+            <button class="status-btn available toggle-bed" data-room="${roomNumber}" data-bed="${newBedNumber}">Available</button>
+        `;
+        
+        // Add to the room
+        bedsContainer.appendChild(newBedItem);
+        
+        // Add event listener to the new bed button
+        const newButton = newBedItem.querySelector('.toggle-bed');
+        newButton.addEventListener('click', function() {
+            toggleBedStatus(this);
+        });
+        
+        // Initialize in Firebase with available status
+        const bedRef = ref(db, `rooms/room-${roomNumber}/bed-${newBedNumber}`);
+        set(bedRef, 'available');
+        
+        // Show notification
+        showNotification(`Bed ${newBedNumber} added to Room ${roomNumber}`);
+    }
+
+    // Function to remove a bed from a room
+    function removeBedFromRoom(roomNumber) {
+        const roomCard = document.querySelector(`.room-card:nth-child(${roomNumber})`);
+        if (!roomCard) return;
+        
+        const currentBedCount = getBedCount(roomNumber);
+        if (currentBedCount <= 1) {
+            showNotification("Cannot remove the last bed from a room");
+            return;
+        }
+        
+        const bedsContainer = roomCard.querySelector('.beds-container');
+        const lastBed = bedsContainer.lastElementChild;
+        
+        if (lastBed) {
+            const bedNumber = lastBed.querySelector('.toggle-bed').getAttribute('data-bed');
+            
+            // Remove from Firebase
+            const bedRef = ref(db, `rooms/room-${roomNumber}/bed-${bedNumber}`);
+            set(bedRef, null);
+            
+            // Remove from DOM
+            bedsContainer.removeChild(lastBed);
+            
+            showNotification(`Bed ${bedNumber} removed from Room ${roomNumber}`);
+        }
+    }
+
+    // Function to toggle bed status
+    function toggleBedStatus(button) {
+        const room = button.getAttribute('data-room');
+        const bed = button.getAttribute('data-bed');
+        const currentStatus = button.classList.contains('available') ? 'available' : 'booked';
+        const newStatus = currentStatus === 'available' ? 'booked' : 'available';
+        
+        // Update Firebase
+        const bedRef = ref(db, `rooms/room-${room}/bed-${bed}`);
+        set(bedRef, newStatus)
+            .then(() => {
+                showNotification(`Bed ${bed} in Room ${room} is now ${newStatus}`);
+            })
+            .catch((error) => {
+                console.error("Error updating bed status:", error);
+                alert("Error updating bed status. Please check your connection.");
+            });
+    }
+
+    // Function to show notification
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+
+    // Add bed management buttons to room headers
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add management buttons to each room header
+        document.querySelectorAll('.room-header').forEach(header => {
+            const roomTitle = header.querySelector('.room-title');
+            const roomNumber = roomTitle.textContent.match(/\d+/)[0];
+            
+            // Create button container
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'bed-management-buttons';
+            buttonContainer.style.display = 'flex';
+            buttonContainer.style.gap = '10px';
+            
+            // Add bed button
+            const addButton = document.createElement('button');
+            addButton.className = 'toggle-btn';
+            addButton.textContent = 'Add Bed';
+            addButton.onclick = () => addBedToRoom(roomNumber);
+            
+            // Remove bed button
+            const removeButton = document.createElement('button');
+            removeButton.className = 'toggle-btn';
+            removeButton.textContent = 'Remove Bed';
+            removeButton.style.backgroundColor = '#ff4757';
+            removeButton.onclick = () => removeBedFromRoom(roomNumber);
+            
+            buttonContainer.appendChild(addButton);
+            buttonContainer.appendChild(removeButton);
+            header.appendChild(buttonContainer);
+        });
+
+        // Set up real-time listeners for all beds
+        for (let room = 1; room <= 5; room++) {
+            // Start with checking up to 5 beds, but we'll dynamically handle more
+            for (let bed = 1; bed <= 5; bed++) {
+                const bedRef = ref(db, `rooms/room-${room}/bed-${bed}`);
+                
+                // Listen for changes to this bed
+                onValue(bedRef, (snapshot) => {
+                    const status = snapshot.val();
+                    const button = document.querySelector(`[data-room="${room}"][data-bed="${bed}"]`);
+                    
+                    if (button && status) {
+                        button.className = 'status-btn ' + status + ' toggle-bed';
+                        button.textContent = status === 'available' ? 'Available' : 'Booked';
+                    }
+                });
+            }
+        }
+
+        // Toggle bed status functionality for existing beds
+        document.querySelectorAll('.toggle-bed').forEach(button => {
+            button.addEventListener('click', function() {
+                toggleBedStatus(this);
+            });
+        });
+    });
+</script>
+</body>
+</html>

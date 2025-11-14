@@ -1,0 +1,53 @@
+/* room-menu.css */
+
+/* 🚀 THIS IS THE KEY TO SMOOTH SCROLLING 🚀 */
+html {
+    /* Enables smooth scrolling on click for any anchor link */
+    scroll-behavior: smooth;
+}
+
+/* --- Menu Styling --- */
+.room-menu {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 0;
+    margin: 30px 0;
+    background-color: var(--light); /* Uses background color defined in index.html */
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.room-menu li a {
+    text-decoration: none;
+    color: var(--dark);
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: block;
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+.room-menu li a:hover {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Optional: Make it responsive on smaller screens */
+@media (max-width: 600px) {
+    .room-menu {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .room-menu li {
+        flex-grow: 1;
+        text-align: center;
+    }
+}

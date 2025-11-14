@@ -1,0 +1,25 @@
+{
+  "pinnedCards": [
+    {
+      "id": "Rakshit PG-NANAK NAGAR-double",
+      "title": "Rakshit PG",
+      "area": "NANAK NAGAR",
+      "roomType": "double",
+      "priority": 1,
+      "pinnedAt": "2024-01-15T11:15:00.000Z"
+    },
+    {
+      "id": "*",
+      "title": "*",
+      "area": "TRIKUTA NAGAR",
+      "roomType": "double",
+      "priority": 0,
+      "pinnedAt": "2024-01-15T10:30:00.000Z"
+    }
+  ],
+  "settings": {
+    "maxPinnedCards": 10,
+    "version": "2.2",
+    "autoPinEnabled": true
+  }
+}

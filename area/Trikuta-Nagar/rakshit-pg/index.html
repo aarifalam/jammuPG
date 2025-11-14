@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunshine PG Residence | Premium Student Accommodation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="map.css">
+    <link rel="stylesheet" href="room-menu.css">
+        <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #2e2a32e8;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        .pg-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 0 0 var(--radius) var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pg-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .pg-header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .pg-tagline {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .total-rooms {
+            font-size: 1.1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 600;
+        }
+        
+        /* Connection Status */
+        .connection-status {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.5rem;
+            font-weight: 300;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .connected {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .disconnected {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        /* Room Container */
+        .room-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .room-card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .room-badge {
+            position: absolute;
+            top: 1px;
+            right: 15px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .room-header {
+            padding: 20px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .room-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .room-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+        
+        .beds-container {
+            padding: 20px;
+        }
+        
+        .bed-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .bed-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .bed-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .status-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: default;
+            pointer-events: none;
+            font-size: 0.85rem;
+        }
+        
+        .available {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .booked {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        /* Facilities Section */
+        .facilities {
+            padding: 20px;
+            background-color: var(--light);
+            border-top: 1px solid #eee;
+        }
+        
+        .facilities h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .facility-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        
+        .facility-item {
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+        
+        .facility-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .facility-item i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        /* Location Section */
+        .location-info {
+            padding: 20px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .location-info h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .location-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .location-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray);
+        }
+        
+        .location-item i {
+            color: var(--primary);
+            width: 20px;
+        }
+        
+        /* Image Gallery */
+        .image-gallery {
+            padding: 20px;
+        }
+        
+        .image-gallery h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 120px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .fullscreen-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .fullscreen-btn:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        /* Video Section */
+        .video-section {
+            padding: 20px;
+            background-color: var(--light);
+        }
+        
+        .video-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .video-container {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 200px;
+            cursor: pointer;
+        }
+        
+        .video-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .video-overlay:hover {
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.1);
+            background: var(--secondary);
+        }
+        
+        /* Description */
+        .description {
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .description h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+      
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 80%;
+            position: relative;
+        }
+        
+        .modal-content img, .modal-content iframe {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2001;
+            transition: var(--transition);
+        }
+        
+        .close-modal:hover {
+            color: var(--accent);
+        }
+        
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 2001;
+        }
+        
+        .modal-nav:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .prev-btn {
+            left: 20px;
+        }
+        
+        .next-btn {
+            right: 20px;
+        }
+        
+        .modal-indicators {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .indicator.active {
+            background: white;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .room-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .pg-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .facility-list {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .contact-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .modal-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .pg-header {
+                padding: 30px 15px;
+            }
+            
+            .pg-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .room-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .facility-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <style>
+    /* Premium Contact Section */
+.contact-section {
+    max-width: 480px;
+    margin: 30px auto;
+    padding: 35px 30px;
+    border-radius: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #2d3748;
+}
+
+.contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.contact-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.12),
+        0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.contact-section h3 {
+    color: #2d3748;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.contact-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+}
+
+.contact-number {
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-number::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.contact-number:hover::before {
+    left: 100%;
+}
+
+.contact-number:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.contact-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.contact-btn {
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 0.95em;
+    letter-spacing: 0.02em;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.contact-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.contact-btn:hover::before {
+    left: 100%;
+}
+
+.contact-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.contact-btn:active {
+    transform: translateY(0);
+}
+
+.contact-btn i {
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+}
+
+.contact-btn:hover i {
+    transform: scale(1.1);
+}
+
+/* Specific button colors */
+.contact-btn:nth-child(1) {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.contact-btn:nth-child(1):hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.contact-btn:nth-child(2) {
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+}
+
+.contact-btn:nth-child(2):hover {
+    background: linear-gradient(135deg, #20bd5c 0%, #0e7a6a 100%);
+}
+
+.contact-btn:nth-child(3) {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+}
+
+.contact-btn:nth-child(3):hover {
+    background: linear-gradient(135deg, #ff5252 0%, #ff9800 100%);
+}
+
+/* Premium badge */
+.contact-section::after {
+    content: 'PREMIUM';
+    position: absolute;
+    top: 15px;
+    right: -30px;
+    background: linear-gradient(90deg, #ff6b6b, #ffa726);
+    color: white;
+    padding: 5px 35px;
+    font-size: 0.7em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .contact-section {
+        margin: 20px 15px;
+        padding: 25px 20px;
+    }
+    
+    .contact-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .contact-btn {
+        padding: 12px 15px;
+        min-width: auto;
+    }
+    
+    .contact-number {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+    }
+}</style>
+</head>
+<body>
+<div class="container">
+    <div class="pg-header">
+        <h1>Rakshit-PG |Trikuta Nagar</h1>
+        <p class="pg-tagline">double and triple-sharing rooms are available...</p>
+        <div class="total-rooms">i have Total - 4 Room for pg ⬇️</div>
+    </div>
+    
+    <div class="connection-status" id="connectionStatus">
+        <i class="fas fa-wifi"></i>
+        <span>Connecting...</span>
+    </div>
+
+    <ul class="room-menu">
+        <li><a href="#room1">Room 1</a></li>
+        <li><a href="#room2">Room 2</a></li>
+        <li><a href="#room3">Room 3</a></li>
+        <li><a href="#room4">Room 4</a></li>
+    </ul>
+
+    <div class="location-map-section">
+        <div class="map-buttons">
+            <button class="map-btn map-btn-primary" id="toggleMapBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span id="toggleMapText">Show Map</span>
+            </button>
+            
+            <button class="map-btn map-btn-success" id="directionsBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                </svg>
+                <span>Get Directions</span>
+            </button>
+        </div>
+
+        <div class="map-container" id="mapContainer">
+            <iframe 
+                class="map-iframe" 
+                src="about:blank" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"
+                id="mapFrame">
+            </iframe>
+        </div>
+    </div>
+
+
+        <div class="room-container">
+            <!-- Room 1 -->
+<div class="room-card" id="room1"> <div class="room-badge">Most Popular</div>
+    <div class="room-header">
+                    <div class="room-title">Room No. 1</div>
+                    <div class="room-price">₹8,000/month</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn available" data-room="1" data-bed="1">Available</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn booked" data-room="1" data-bed="2">Booked</button>
+                    </div>
+
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 3</span>
+                        </div>
+                        <button class="status-btn booked" data-room="1" data-bed="3">Booked</button>
+                    </div>
+                </div>
+                
+                <div class="facilities">
+                    <h3><i class="fas fa-concierge-bell"></i> Facilities</h3>
+                    <div class="facility-list">
+                        <div class="facility-item">
+                            <i class="fas fa-wifi"></i>
+                            <span>High-Speed WiFi</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Air Conditioning</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-shower"></i>
+                            <span>Attached Bathroom</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Geyser (24/7 Hot Water)</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-tshirt"></i>
+                            <span>Laundry Service</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-utensils"></i>
+                            <span>Meals Available</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="image-gallery">
+                    <h3><i class="fas fa-images"></i> Room Gallery</h3>
+                    <div class="gallery-container">
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-section">
+                    <h3><i class="fas fa-video"></i> Room Video Tour</h3>
+                    <div class="video-container" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Video thumbnail">
+                        <div class="video-overlay">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="description">
+                    <h4><i class="fas fa-info-circle"></i> Room Description</h4>
+                    <p>This spacious triple-sharing room features comfortable beds, ample storage space, and an attached bathroom with 24/7 hot water. Perfect for students or working professionals looking for a comfortable and convenient living space.</p>
+                </div>
+                
+                <div class="contact-section">
+                    <h3>Interested in this room?</h3>
+                    <div class="contact-number">+91 98765 43210</div>
+                    <div class="contact-actions">
+                        <div class="contact-btn">
+                            <i class="fas fa-phone"></i>
+                            <span>Call Now</span>
+                        </div>
+                        <div class="contact-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Room 2 -->
+    <div class="room-card" id="room2"> 
+    <div class="room-header">
+                    <div class="room-title">Room No. 2</div>
+                    <div class="room-price">₹8,000/month</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn available" data-room="2" data-bed="1">Available</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn available" data-room="2" data-bed="2">Available</button>
+                    </div>
+                </div>
+                
+                <div class="facilities">
+                    <h3><i class="fas fa-concierge-bell"></i> Facilities</h3>
+                    <div class="facility-list">
+                        <div class="facility-item">
+                            <i class="fas fa-wifi"></i>
+                            <span>High-Speed WiFi</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Air Conditioning</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-shower"></i>
+                            <span>Attached Bathroom</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Geyser (24/7 Hot Water)</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-tshirt"></i>
+                            <span>Laundry Service</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-utensils"></i>
+                            <span>Meals Available</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="image-gallery">
+                    <h3><i class="fas fa-images"></i> Room Gallery</h3>
+                    <div class="gallery-container">
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-section">
+                    <h3><i class="fas fa-video"></i> Room Video Tour</h3>
+                    <div class="video-container" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Video thumbnail">
+                        <div class="video-overlay">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="description">
+                    <h4><i class="fas fa-info-circle"></i> Room Description</h4>
+                    <p>Well-lit double-sharing room with comfortable beds, individual study tables, and high-speed WiFi. Located on the first floor with a balcony view. Perfect for students who need a quiet study environment.</p>
+                </div>
+                
+                <div class="contact-section">
+                    <h3>Interested in this room?</h3>
+                    <div class="contact-number">+91 98765 43210</div>
+                    <div class="contact-actions">
+                        <div class="contact-btn">
+                            <i class="fas fa-phone"></i>
+                            <span>Call Now</span>
+                        </div>
+                        <div class="contact-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Room 3 -->
+<div class="room-card" id="room3"> 
+    <div class="room-header">
+                    <div class="room-title">Room No. 3</div>
+                    <div class="room-price">₹8,000/month</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn available" data-room="3" data-bed="1">Available</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn booked" data-room="3" data-bed="2">Available</button>
+                    </div>
+
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 3</span>
+                        </div>
+                        <button class="status-btn booked" data-room="3" data-bed="3">Booked</button>
+                    </div>
+                </div>
+                
+                <div class="facilities">
+                    <h3><i class="fas fa-concierge-bell"></i> Facilities</h3>
+                    <div class="facility-list">
+                        <div class="facility-item">
+                            <i class="fas fa-wifi"></i>
+                            <span>High-Speed WiFi</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Air Conditioning</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-shower"></i>
+                            <span>Attached Bathroom</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Geyser (24/7 Hot Water)</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-tshirt"></i>
+                            <span>Laundry Service</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-utensils"></i>
+                            <span>Meals Available</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="image-gallery">
+                    <h3><i class="fas fa-images"></i> Room Gallery</h3>
+                    <div class="gallery-container">
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-section">
+                    <h3><i class="fas fa-video"></i> Room Video Tour</h3>
+                    <div class="video-container" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Video thumbnail">
+                        <div class="video-overlay">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="description">
+                    <h4><i class="fas fa-info-circle"></i> Room Description</h4>
+                    <p>This spacious triple-sharing room features comfortable beds, ample storage space, and an attached bathroom with 24/7 hot water. Perfect for students or working professionals looking for a comfortable and convenient living space.</p>
+                </div>
+                
+                <div class="contact-section">
+                    <h3>Interested in this room?</h3>
+                    <div class="contact-number">+91 98765 43210</div>
+                    <div class="contact-actions">
+                        <div class="contact-btn">
+                            <i class="fas fa-phone"></i>
+                            <span>Call Now</span>
+                        </div>
+                        <div class="contact-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Room 4 -->
+          <div class="room-card" id="room4"> 
+             <div class="room-header">
+                    <div class="room-title">Room No. 4</div>
+                    <div class="room-price">₹8,000/month</div>
+                </div>
+                
+                <div class="beds-container">
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 1</span>
+                        </div>
+                        <button class="status-btn available" data-room="4" data-bed="1">Available</button>
+                    </div>
+                    
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 2</span>
+                        </div>
+                        <button class="status-btn booked" data-room="4" data-bed="2">Booked</button>
+                    </div>
+
+                    <div class="bed-item">
+                        <div class="bed-info">
+                            <span class="bed-icon">🛏️</span>
+                            <span>Bed 3</span>
+                        </div>
+                        <button class="status-btn booked" data-room="4" data-bed="3">Booked</button>
+                    </div>
+                </div>
+                
+                <div class="facilities">
+                    <h3><i class="fas fa-concierge-bell"></i> Facilities</h3>
+                    <div class="facility-list">
+                        <div class="facility-item">
+                            <i class="fas fa-wifi"></i>
+                            <span>High-Speed WiFi</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Air Conditioning</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-shower"></i>
+                            <span>Attached Bathroom</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Geyser (24/7 Hot Water)</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-tshirt"></i>
+                            <span>Laundry Service</span>
+                        </div>
+                        <div class="facility-item">
+                            <i class="fas fa-utensils"></i>
+                            <span>Meals Available</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="image-gallery">
+                    <h3><i class="fas fa-images"></i> Room Gallery</h3>
+                    <div class="gallery-container">
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Room image">
+                            <button class="fullscreen-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-section">
+                    <h3><i class="fas fa-video"></i> Room Video Tour</h3>
+                    <div class="video-container" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Video thumbnail">
+                        <div class="video-overlay">
+                            <div class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="description">
+                    <h4><i class="fas fa-info-circle"></i> Room Description</h4>
+                    <p>This spacious triple-sharing room features comfortable beds, ample storage space, and an attached bathroom with 24/7 hot water. Perfect for students or working professionals looking for a comfortable and convenient living space.</p>
+                </div>
+                
+                <div class="contact-section">
+                    <h3>Interested in this room?</h3>
+                    <div class="contact-number">+91 98765 43210</div>
+                    <div class="contact-actions">
+                        <div class="contact-btn">
+                            <i class="fas fa-phone"></i>
+                            <span>Call Now</span>
+                        </div>
+                        <div class="contact-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <!-- Modal for fullscreen images and videos -->
+    <div class="modal" id="imageModal">
+        <span class="close-modal">&times;</span>
+        <button class="modal-nav prev-btn"><i class="fas fa-chevron-left"></i></button>
+        <button class="modal-nav next-btn"><i class="fas fa-chevron-right"></i></button>
+        <div class="modal-content" id="modalContent"></div>
+        <div class="modal-indicators" id="modalIndicators"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFB6GRSzXvmE8p7FcBTbAKLtaNhGgQ0mA",
+            authDomain: "pg-management-a38e6.firebaseapp.com",
+            databaseURL: "https://pg-management-a38e6-default-rtdb.firebaseio.com",
+            projectId: "pg-management-a38e6",
+            storageBucket: "pg-management-a38e6.firebasestorage.app",
+            messagingSenderId: "620110947710",
+            appId: "1:620110947710:web:5351c5b85f7ab2c8ae7f2f"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const connectionStatus = document.getElementById('connectionStatus');
+
+        // Monitor connection status
+        const connectedRef = ref(db, ".info/connected");
+        onValue(connectedRef, (snap) => {
+            if (snap.val() === true) {
+                connectionStatus.innerHTML = '<i class="fas fa-wifi"></i> <span>Connected</span>';
+                connectionStatus.className = "connection-status connected";
+            } else {
+                connectionStatus.innerHTML = '<i class="fas fa-wifi-slash"></i> <span>Disconnected</span>';
+                connectionStatus.className = "connection-status disconnected";
+            }
+        });
+
+        // Function to update room display with dynamic beds
+        function updateRoomDisplay(roomNumber, bedData) {
+            const roomCard = document.querySelector(`.room-card:nth-child(${roomNumber})`);
+            if (!roomCard) return;
+            
+            const bedsContainer = roomCard.querySelector('.beds-container');
+            if (!bedsContainer) return;
+            
+            // Clear existing beds
+            bedsContainer.innerHTML = '';
+            
+            // Get all beds for this room and sort them by bed number
+            const bedNumbers = Object.keys(bedData)
+                .filter(key => key.startsWith('bed-'))
+                .sort((a, b) => {
+                    const numA = parseInt(a.replace('bed-', ''));
+                    const numB = parseInt(b.replace('bed-', ''));
+                    return numA - numB;
+                });
+            
+            // Create bed items for each bed
+            bedNumbers.forEach(bedKey => {
+                const bedNumber = bedKey.replace('bed-', '');
+                const status = bedData[bedKey];
+                
+                const bedItem = document.createElement('div');
+                bedItem.className = 'bed-item';
+                bedItem.innerHTML = `
+                    <div class="bed-info">
+                        <span class="bed-icon">🛏️</span>
+                        <span>Bed ${bedNumber}</span>
+                    </div>
+                    <button class="status-btn ${status}" data-room="${roomNumber}" data-bed="${bedNumber}">
+                        ${status === 'available' ? 'Available' : 'Booked'}
+                    </button>
+                `;
+                
+                bedsContainer.appendChild(bedItem);
+            });
+            
+            // Update room title to show bed count
+            const roomTitle = roomCard.querySelector('.room-title');
+            if (roomTitle && bedNumbers.length > 0) {
+                const sharingType = bedNumbers.length === 1 ? 'Single' : 
+                                   bedNumbers.length === 2 ? 'Double sharing' : 
+                                   bedNumbers.length === 3 ? 'Triple sharing' : 
+                                   `${bedNumbers.length} sharing`;
+                
+                // Remove existing sharing info and add new one
+                roomTitle.innerHTML = roomTitle.innerHTML.replace(/\[.*\]/, '') + ` [ ${sharingType} ]`;
+            }
+        }
+
+        // Gallery and Modal functionality
+        let currentGallery = [];
+        let currentIndex = 0;
+
+        function openModal(type, src, index, gallery) {
+            const modal = document.getElementById('imageModal');
+            const modalContent = document.getElementById('modalContent');
+            const modalIndicators = document.getElementById('modalIndicators');
+            
+            currentGallery = gallery || [];
+            currentIndex = index || 0;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            if (type === 'image') {
+                modalContent.innerHTML = `<img src="${src}" alt="Fullscreen image">`;
+            } else if (type === 'video') {
+                modalContent.innerHTML = `<iframe src="${src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            }
+            
+            // Update indicators if gallery exists
+            modalIndicators.innerHTML = '';
+            if (currentGallery.length > 1) {
+                currentGallery.forEach((_, idx) => {
+                    const indicator = document.createElement('div');
+                    indicator.className = `indicator ${idx === currentIndex ? 'active' : ''}`;
+                    indicator.addEventListener('click', () => {
+                        currentIndex = idx;
+                        updateModalContent();
+                    });
+                    modalIndicators.appendChild(indicator);
+                });
+            }
+        }
+
+        function updateModalContent() {
+            const modalContent = document.getElementById('modalContent');
+            const modalIndicators = document.getElementById('modalIndicators');
+            
+            if (currentGallery[currentIndex].type === 'image') {
+                modalContent.innerHTML = `<img src="${currentGallery[currentIndex].src}" alt="Fullscreen image">`;
+            } else if (currentGallery[currentIndex].type === 'video') {
+                modalContent.innerHTML = `<iframe src="${currentGallery[currentIndex].src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            }
+            
+            // Update indicators
+            Array.from(modalIndicators.children).forEach((indicator, idx) => {
+                indicator.className = `indicator ${idx === currentIndex ? 'active' : ''}`;
+            });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event listeners for gallery
+        document.addEventListener('DOMContentLoaded', function() {
+            // Image gallery functionality
+            document.querySelectorAll('.gallery-item').forEach((item, index) => {
+                const img = item.querySelector('img');
+                const fullscreenBtn = item.querySelector('.fullscreen-btn');
+                const galleryContainer = item.closest('.gallery-container');
+                const galleryItems = Array.from(galleryContainer.querySelectorAll('.gallery-item'));
+                
+                // Create gallery for this room
+                const gallery = galleryItems.map(galleryItem => ({
+                    type: 'image',
+                    src: galleryItem.querySelector('img').src
+                }));
+                
+                // Click on image to open fullscreen
+                img.addEventListener('click', () => {
+                    openModal('image', img.src, index, gallery);
+                });
+                
+                // Click on fullscreen button to open fullscreen
+                fullscreenBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openModal('image', img.src, index, gallery);
+                });
+            });
+            
+            // Video functionality
+            document.querySelectorAll('.video-container').forEach(container => {
+                const videoSrc = container.getAttribute('data-video');
+                const overlay = container.querySelector('.video-overlay');
+                
+                overlay.addEventListener('click', () => {
+                    openModal('video', videoSrc + '?autoplay=1');
+                });
+            });
+            
+            // Modal navigation
+            document.querySelector('.prev-btn').addEventListener('click', () => {
+                if (currentGallery.length > 0) {
+                    currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+                    updateModalContent();
+                }
+            });
+            
+            document.querySelector('.next-btn').addEventListener('click', () => {
+                if (currentGallery.length > 0) {
+                    currentIndex = (currentIndex + 1) % currentGallery.length;
+                    updateModalContent();
+                }
+            });
+            
+            // Close modal
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside content
+            document.getElementById('imageModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                const modal = document.getElementById('imageModal');
+                if (modal.style.display === 'flex') {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                    } else if (e.key === 'ArrowLeft') {
+                        document.querySelector('.prev-btn').click();
+                    } else if (e.key === 'ArrowRight') {
+                        document.querySelector('.next-btn').click();
+                    }
+                }
+            });
+            
+            // Initialize Firebase data
+            const roomsRef = ref(db, 'rooms');
+            onValue(roomsRef, (snapshot) => {
+                const roomsData = snapshot.val();
+                if (roomsData) {
+                    Object.keys(roomsData).forEach(roomKey => {
+                        const roomNumber = parseInt(roomKey.replace('room-', ''));
+                        updateRoomDisplay(roomNumber, roomsData[roomKey]);
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+  // Select all room contact sections
+  const contactSections = document.querySelectorAll('.room-card .contact-section');
+
+  contactSections.forEach(section => {
+    const callBtn = section.querySelector('.contact-btn:first-child');
+    const whatsappBtn = section.querySelector('.contact-btn:last-child');
+    const numberDiv = section.querySelector('.contact-number');
+
+    if (numberDiv) {
+      const phoneNumber = numberDiv.textContent.trim().replace(/\s+/g, '');
+
+      // Call button click
+      callBtn.addEventListener('click', () => {
+        window.location.href = `tel:${phoneNumber}`;
+      });
+
+      // WhatsApp button click
+      whatsappBtn.addEventListener('click', () => {
+        const cleanNumber = phoneNumber.replace(/\D/g, '');
+        window.open(`https://wa.me/${cleanNumber}`, '_blank');
+      });
+    }
+  });
+</script>
+
+    <script src="map.js"></script>
+</body>
+</html>

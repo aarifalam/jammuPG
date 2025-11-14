@@ -1,0 +1,102 @@
+        /* ===== COPY THESE STYLES TO YOUR INDEX.HTML ===== */
+        .location-map-section {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .map-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .map-btn {
+            flex: 1;
+            min-width: 200px;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .map-btn:active {
+            transform: translateY(0);
+        }
+
+        .map-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .map-btn-primary:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .map-btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .map-btn-success:hover {
+            box-shadow: 0 6px 25px rgba(17, 153, 142, 0.4);
+        }
+
+        .map-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .map-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .map-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .map-buttons {
+                flex-direction: column;
+            }
+
+            .map-btn {
+                min-width: 100%;
+            }
+
+            .map-iframe {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .map-iframe {
+                height: 350px;
+            }
+        }
